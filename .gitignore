@@ -3,6 +3,7 @@ config.lua
 
 # Useless things
 discordia.log
+gateway.json
 
 # Personal things
 ignored/
