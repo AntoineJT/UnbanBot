@@ -1,0 +1,8 @@
+# We don't want to commit our bot token
+config.lua
+
+# Useless things
+discordia.log
+
+# Personal things
+ignored/
