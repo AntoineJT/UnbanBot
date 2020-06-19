@@ -47,7 +47,6 @@ client:on("messageCreate", function(message)
         local guildName = guild.name
         print(string.format("[%s] %s decided to unban everyone from the guild", guildName, author.tag))
 
-        local banlist = io.open("banlist.txt", "a")
         for _, ban in pairs(guild:getBans()) do
             if ban:delete() then
                 print(string.format("[UNBAN] %s was banned from guild `%s` for `%s`", ban.user.tag, guildName, ban.reason))
