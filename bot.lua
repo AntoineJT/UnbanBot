@@ -22,6 +22,31 @@ end
 
 discordia.extensions() -- load all helpful extensions
 
+local function isAdmin(member)
+	return member:hasPermission(enums.permission.administrator)
+end
+
+local function cmdUnbanAll(message)
+	local guild = message.guild
+	local author = message.author
+	
+	if not isAdmin(guild:getMember(author.id)) then
+            message:reply("You're not an administrator of the guild!")
+            return
+	end
+	
+	local guildName = guild.name
+	print(string.format("[%s] %s (%s) decided to unban everyone from the guild", guildName, author.id, author.tag))
+
+	for _, ban in pairs(guild:getBans()) do
+		if ban:delete() then
+			print(string.format("[UNBAN] %s (%s) was banned from guild `%s` for `%s`", ban.user.tag, ban.user.id, guildName, ban.reason))
+		else
+			print(string.format("[ERROR] Failed to unban %s (%s) from guild '%s'", ban.user.tag, ban.user.id, guildName))
+		end
+	end
+end
+
 client:on("ready", function() -- bot is ready
 	print("Logged in as " .. client.user.username)
 end)
@@ -38,26 +63,11 @@ client:on("messageCreate", function(message)
         message:reply("You can't PM me to use commands!")
         return
     end
-    local content = message.content
-    local args = content:split(" ") -- split all arguments into a table
-    local author = message.author
+    local args = message.content:split(" ") -- split all arguments into a table
 
     -- args[1] is the bot mention
     if args[2] == "unban-all" and #args == 2 then
-        if not guild:getMember(author.id):hasPermission(enums.permission.administrator) then
-            message:reply("You're not an administrator of the guild!")
-            return
-        end
-        local guildName = guild.name
-        print(string.format("[%s] %s decided to unban everyone from the guild", guildName, author.tag))
-
-        for _, ban in pairs(guild:getBans()) do
-            if ban:delete() then
-                print(string.format("[UNBAN] %s was banned from guild `%s` for `%s`", ban.user.tag, guildName, ban.reason))
-            else
-                print(string.format("[ERROR] Failed to unban %s from guild '%s'", ban.user.tag, guildName))
-            end
-        end
+		cmdUnbanAll(message)
     end
 end)
 
