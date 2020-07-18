@@ -42,6 +42,10 @@ local function numberOfPeople(count)
 	return ""
 end
 
+local function channelIdFromMention(mentionString)
+	return mentionString:sub(3, #mentionString - 1)
+end
+
 local function cmdUnbanAll(message)
 	local guild = message.guild
 	local author = message.author
@@ -86,7 +90,13 @@ client:on("messageCreate", function(message)
     -- args[1] is the bot mention
     if args[2] == "unban-all" and #args == 2 then
 		cmdUnbanAll(message)
-    end
+		return
+	end
+	if args[2] == "dump" and #args == 3 then
+		local channelId = channelIdFromMention(args[3])
+		
+		print(channelId)
+	end
 end)
 
 if Config.Token ~= nil then
