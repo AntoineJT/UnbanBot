@@ -26,21 +26,39 @@ local function isAdmin(member)
 	return member:hasPermission(enums.permission.administrator)
 end
 
+local function numberOfPeople(count)
+	assert(count >= 0, "People number is negative! (" .. count .. ")")
+	
+	if count > 1 then
+		return count .. " people"
+	end
+	if count == 0 then
+		return "no one"
+	end
+	if count == 1 then
+		return count .. " person"
+	end
+	
+	return ""
+end
+
 local function cmdUnbanAll(message)
 	local guild = message.guild
 	local author = message.author
 	
 	if not isAdmin(guild:getMember(author.id)) then
-            message:reply("You're not an administrator of the guild!")
-            return
+		message:reply("You're not an administrator of the guild!")
+		return
 	end
 	
 	local guildName = guild.name
-	print(string.format("[%s] %s (%s) decided to unban everyone from the guild", guildName, author.id, author.tag))
+	local guildBans = guild:getBans()
+	print(string.format("[%s] %s (%s) decided to unban everyone (%s) from the guild", guildName, author.id, author.tag, numberOfPeople(#guildBans)))
 
-	for _, ban in pairs(guild:getBans()) do
+	for _, ban in pairs(guildBans) do
 		if ban:delete() then
-			print(string.format("[UNBAN] %s (%s) was banned from guild `%s` for `%s`", ban.user.tag, ban.user.id, guildName, ban.reason))
+			local reason = ban.reason or "<no reason specified>"
+			print(string.format("[UNBAN] %s (%s) was banned from guild `%s` for `%s`", ban.user.tag, ban.user.id, guildName, reason))
 		else
 			print(string.format("[ERROR] Failed to unban %s (%s) from guild '%s'", ban.user.tag, ban.user.id, guildName))
 		end
