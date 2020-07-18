@@ -1,6 +1,11 @@
 # We don't want to commit our bot token
 config.lua
 
+# Luvit
+lit
+luvi
+luvit
+
 # Useless things
 discordia.log
 gateway.json

@@ -3,6 +3,10 @@ local client = discordia.Client()
 local enums = discordia.enums
 
 -- The config loading part has been stolen from Not a Bot: https://github.com/DigitalPulseSoftware/NotaBot/blob/9a222dd2f0e513dd99552bfec0feb25e3a8df8ef/bot.lua
+local function code(str)
+    return string.format('```\n%s```', str)
+end
+
 Config = {}
 local func, err = loadfile("config.lua", "bt", Config)
 if (not func) then
