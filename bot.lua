@@ -45,11 +45,11 @@ end
 local function cmdUnbanAll(message)
 	local guild = message.guild
 	local author = message.author
-	
-	if not isAdmin(guild:getMember(author.id)) then
-		message:reply("You're not an administrator of the guild!")
-		return
-	end
+
+--	if not isAdmin(guild:getMember(author.id)) then
+--		message:reply("You're not an administrator of the guild!")
+--		return
+--	end
 	
 	local guildName = guild.name
 	local guildBans = guild:getBans()
@@ -69,24 +69,30 @@ client:on("ready", function() -- bot is ready
 	print("Logged in as " .. client.user.username)
 end)
 
+started = false
+
 client:on("messageCreate", function(message)
+	if started then
+		return
+	end
+	started = true
     local mentionedUsers = message.mentionedUsers
 
-    if #mentionedUsers ~= 1 or mentionedUsers.first.id ~= client.user.id then
-        return
-    end
+--    if #mentionedUsers ~= 1 or mentionedUsers.first.id ~= client.user.id then
+--        return
+--    end
 
     local guild = message.guild
-    if guild == nil then
-        message:reply("You can't PM me to use commands!")
-        return
-    end
-    local args = message.content:split(" ") -- split all arguments into a table
+--    if guild == nil then
+--        message:reply("You can't PM me to use commands!")
+--        return
+--    end
+--    local args = message.content:split(" ") -- split all arguments into a table
 
     -- args[1] is the bot mention
-    if args[2] == "unban-all" and #args == 2 then
+--    if args[2] == "unban-all" and #args == 2 then
 		cmdUnbanAll(message)
-    end
+--    end
 end)
 
 if Config.Token ~= nil then
